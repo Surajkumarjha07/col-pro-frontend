@@ -241,7 +241,6 @@ export default function CartComponent() {
       );
 
       if (response.status === 200) {
-        console.log("RESPINFKHKKFDH::::::::::: ", response.data);
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
