@@ -12,6 +12,7 @@ import Products from "./pages/product";
 import ManageAccount from "./pages/manage-account";
 import Cart from "./pages/cart";
 import Order from "./pages/order";
+import About from "./pages/about";
 
 function App() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ function App() {
         <Route path="/products" element={<Products/>}/>
         <Route path="/cart" element={<Cart/>}/>
         <Route path="/orders" element={<Order/>}/>
+        <Route path="/about" element={<About/>}/>
       </Routes>
       {!isHideNavbar && <Footer />}
     </>

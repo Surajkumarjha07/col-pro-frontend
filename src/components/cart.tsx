@@ -9,6 +9,7 @@ export default function CartComponent() {
   const { token } = useAppSelector((state) => state.User);
   const [cartProducts, setCartProducts] = useState<any[]>([]);
   const [amount, setAmount] = useState(0);
+  const user = useAppSelector(state => state.User.user);
 
   const handlePayment = async () => {
     const response = await axios.post(
@@ -34,36 +35,82 @@ export default function CartComponent() {
             key: import.meta.env.VITE_RAZORPAY_KEY_ID,
             amount: razorpay_order.amount,
             currency: razorpay_order.currency,
-            name: "Your App Name",
+            name: "E-Marketplace",
             description: "Payment",
             order_id: razorpay_order.id,
             handler: async function (response: any) {
               console.log("PAYMENT SUCCESS::::::::", response);
-              
-              const finalResponse = await axios.post("http://localhost:4000/api/payment",
+
+              const finalResponse = await axios.post(
+                "http://localhost:4000/api/payment",
                 {
                   paymentId: response.razorpay_payment_id,
-                  internalPaymentId: payment_order._id
+                  internalPaymentId: payment_order._id,
                 },
                 {
                   headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
                   },
-                  withCredentials: true
-                }
-              )
+                  withCredentials: true,
+                },
+              );
 
               if (finalResponse.status === 200) {
                 toast.success("Payment Successful!");
+                try {
+                  const response = await axios.post(
+                    "http://localhost:4000/api/order",
+                    {},
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      withCredentials: true,
+                    },
+                  );
+
+                  if (response.status === 200) {
+                    toast.success("Your order has been placed!");
+                  }
+                } catch (error) {
+                  if (axios.isAxiosError(error)) {
+                    const message =
+                      error.response?.data.message ??
+                      error.response?.data.data ??
+                      "Internal server error!";
+                    toast.error(message);
+                  }
+                }
+              }
+            },
+            modal: {
+              ondismiss: async () => {
+                const response = await axios.put("http://localhost:4000/api/payment", 
+                  {
+                    orderId: payment_order.orderId
+                  },
+                  {
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Authorization": `Bearer ${token}`
+                    },
+                    withCredentials: true
+                  }
+                )
+
+                if (response.status === 200) {
+                  toast.success("Payment cancelled!");
+                }
               }
             },
             prefill: {
-              name: "Test User",
-              email: "test@example.com",
+              name: (user as any).name,
+              email: (user as any).email,
             },
             theme: {
-              color: "#000000",
+              color: "#609af7",
             },
           };
 
@@ -223,33 +270,6 @@ export default function CartComponent() {
       }));
 
       setCartProducts((prev) => prev.filter((item) => item._id !== id));
-    }
-  };
-
-  const handleOrder = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/api/order",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        },
-      );
-
-      if (response.status === 200) {
-      }
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data.message ??
-          error.response?.data.data ??
-          "Internal server error!";
-        toast.error(message);
-      }
     }
   };
 

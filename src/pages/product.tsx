@@ -11,6 +11,7 @@ export default function Products() {
   const [searchQuery, setSearchQuery] = useState("");
   const [openProductUpload, setOpenProductUpload] = useState(false);
   const token = useAppSelector((state) => state.User.token);
+  const user = useAppSelector((state) => state.User.user);
   const [products, setProducts] = useState<any[]>([]);
 
   const handleGetCreatedProducts = async () => {
@@ -94,13 +95,16 @@ export default function Products() {
         <div className="flex items-center justify-end bg-white p-6">
           <Search searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
-          <button
+          {
+            (user as any).role === "seller" &&
+            <button
             className="ml-4 flex items-center cursor-pointer gap-2 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-gray-800 transition-colors"
             onClick={() => setOpenProductUpload(true)}
-          >
+            >
             <BiPlus className="text-xl" />
             New Product
           </button>
+          }
         </div>
 
         <ProductUpload

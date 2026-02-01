@@ -24,11 +24,9 @@ export default function ProductCard({
 }: ProductCardProps) {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
-  // const [productId, setProductId] = useState("");
   const token = useAppSelector((state) => state.User.token);
+  const user = useAppSelector((state) => state.User.user);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  console.log("ID:::::::: ", id)
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -155,7 +153,9 @@ export default function ProductCard({
             {productName}
           </h3>
 
-          <div className="relative" ref={menuRef}>
+          {
+            (user as any).role === "seller" &&
+            <div className="relative" ref={menuRef}>
             <button
               onClick={() => setOpen((prev) => !prev)}
               className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
@@ -172,7 +172,7 @@ export default function ProductCard({
                     // setProductId(id);
                   }}
                   className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-                >
+                  >
                   Update
                 </button>
 
@@ -182,12 +182,13 @@ export default function ProductCard({
                     handleDeleteProduct()
                   }}
                   className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
-                >
+                  >
                   Delete
                 </button>
               </div>
             )}
           </div>
+      }
         </div>
 
             {/* Product Update Modal */}
