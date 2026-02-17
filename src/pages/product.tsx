@@ -208,7 +208,7 @@ export default function Products() {
               count={Math.ceil(totalProducts / limit)}
               shape="rounded"
               page={page}
-              onChange={(e, value) => setPage(value)}
+              onChange={(_, value) => setPage(value)}
             />
           </div>
         </div>

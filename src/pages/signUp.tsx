@@ -96,7 +96,6 @@ export default function SignUp() {
                                 <button className={`${role === "seller" ? "text-gray-900" : "text-gray-500"} rounded-t-md w-1/2 py-3 font-medium`} onClick={(e) => changeSignUpType(e, "seller")}>
                                     Seller
                                 </button>
-
                                 <div className={`w-1/2 h-[3px] bg-gray-900 rounded-md ${role == "user" ? "translate-x-0" : "translate-x-full"} transition-all duration-200`} />
                             </div>
 

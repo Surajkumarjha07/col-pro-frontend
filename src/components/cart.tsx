@@ -1,7 +1,6 @@
 import { FiMinus, FiPlus, FiTrash2 } from "react-icons/fi";
 
 export default function CartComponent({
-  handlePayment,
   decreaseQty,
   increaseQty,
   removeItem,

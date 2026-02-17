@@ -280,7 +280,7 @@ export default function Cart() {
         <div className="max-w-3xl w-full mx-auto p-4 space-y-4">
           <h1 className="text-2xl font-semibold">Shopping Cart</h1>
 
-          {cart && cartProducts?.map((product, index) => (
+          {cart && cartProducts?.map((product) => (
             <CartComponent
               handlePayment={handlePayment}
               decreaseQty={decreaseQty}
