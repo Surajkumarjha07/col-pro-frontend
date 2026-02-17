@@ -39,7 +39,7 @@ export default function ManageAccount() {
     setSubmitClicked(true);
 
     try {
-      const response = await axios.put("http://localhost:4000/api/users/update-user",
+      const response = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/update-user`,
         {
           newEmail: email,
           newName: name,
@@ -75,7 +75,7 @@ export default function ManageAccount() {
     setSubmitClicked(true);
 
     try {
-      const response = await axios.delete(`http://localhost:4000/api/users/delete-user`,
+      const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/users/delete-user`,
         {
           data: {
             password: oldPassword

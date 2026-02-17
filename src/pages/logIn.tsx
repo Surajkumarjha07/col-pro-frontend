@@ -6,15 +6,9 @@ import { useAppDispatch } from "../redux/hooks";
 import { setToken, setUser } from "../redux/slices/user";
 
 export default function LogIn() {
-    const [role, setRole] = useState<string>("user");
     const [submitClicked, setSubmitClicked] = useState(false);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
-    const changeLogInType = (e: React.MouseEvent, type: string) => {
-        e.preventDefault();
-        setRole(type);
-    }
 
     const logIn = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -22,7 +16,6 @@ export default function LogIn() {
         try {
             const target = e.target as HTMLFormElement;
             const formData = new FormData(target);
-            formData.append("role", role);
             const payload = Object.fromEntries(formData.entries());
 
             if (!formData.get("email") || !formData.get("password")) {
@@ -30,7 +23,7 @@ export default function LogIn() {
                 return;
             }
 
-            const response = await axios.post("http://localhost:4000/api/users/log-in",
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/log-in`,
                 payload,
                 {
                     headers: {
@@ -54,7 +47,7 @@ export default function LogIn() {
 
         } catch (error) {
             if (error instanceof AxiosError) {   
-                const message = error?.response?.data?.message ?? "Internal server error!";
+                const message = error?.response?.data?.message ?? error.response?.data.data ?? "Internal server error!";
                 toast.error(message);
             }
             setSubmitClicked(false);
@@ -70,7 +63,7 @@ export default function LogIn() {
                         Welcome back,
                         </span>
                             <span className="inline-block text-purple-500">
-                                {role === "user" ? "User!" : "Seller!"}
+                                User
                             </span>
                         <br />
                         <span className="text-purple-500">Log in</span>
@@ -93,18 +86,6 @@ export default function LogIn() {
                 <aside className='w-1/2 h-screen flex justify-center items-center'>
                     <form className='bg-white relative mx-auto h-fit mt-12 w-3/5 px-10 pt-4 pb-8 rounded-xl shadow-md shadow-gray-300' onSubmit={(e) => logIn(e)}>
                         <fieldset>
-                            <div className='w-full relative'>
-                                <button className={`${role === "user" ? "text-gray-900" : "text-gray-500"} rounded-t-md w-1/2 py-3 font-medium`} onClick={(e) => changeLogInType(e, "user")}>
-                                    User
-                                </button>
-
-                                <button className={`${role === "captain" ? "text-gray-900" : "text-gray-500"} rounded-t-md w-1/2 py-3 font-medium`} onClick={(e) => changeLogInType(e, "captain")}>
-                                    Seller
-                                </button>
-
-                                <div className={`w-1/2 h-[3px] bg-gray-900 rounded-md ${role == "user" ? "translate-x-0" : "translate-x-full"} transition-all duration-200`} />
-                            </div>
-
                             <div className='my-6'>
                                 <p className='text-center font-bold text-2xl text-gray-900'>Login to Account</p>
                                 <p className='text-center text-xs text-gray-500 my-2'>Please enter your email and password to continue</p>

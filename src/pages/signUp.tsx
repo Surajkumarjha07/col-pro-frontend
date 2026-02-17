@@ -30,7 +30,7 @@ export default function SignUp() {
                 return;
             }
 
-            const response = await axios.post("http://localhost:4000/api/users/sign-up",
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/sign-up`,
                 payload,
                 {
                     headers: {
@@ -42,6 +42,8 @@ export default function SignUp() {
 
             if (response.status == 200 || response.status == 201) {
                 toast.success("Congrats! registered successfully!");
+                navigate("/log-in")
+                setSubmitClicked(false);
                 return;
             }
 
@@ -91,7 +93,7 @@ export default function SignUp() {
                                     User
                                 </button>
 
-                                <button className={`${role === "captain" ? "text-gray-900" : "text-gray-500"} rounded-t-md w-1/2 py-3 font-medium`} onClick={(e) => changeSignUpType(e, "captain")}>
+                                <button className={`${role === "seller" ? "text-gray-900" : "text-gray-500"} rounded-t-md w-1/2 py-3 font-medium`} onClick={(e) => changeSignUpType(e, "seller")}>
                                     Seller
                                 </button>
 

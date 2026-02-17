@@ -11,7 +11,7 @@ export default function Order() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/order", {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/order`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -37,16 +37,18 @@ export default function Order() {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center gap-12 w-full my-8">
-        <div className="flex flex-col justify-center items-start gap-8 w-3/4">
+    <section className="flex flex-col flex-1 justify-start items-center">
+        <div className="flex flex-col justify-start items-start gap-8 w-full max-w-5xl mx-auto my-8 flex-1">
           <p className="text-gray-800 font-semibold text-3xl">Orders</p>
           {orders.length > 0 ? (
             orders.map((order) => <OrdersComponent order={order} />)
           ) : (
-            <p className="text-center text-4xl text-gray-800 font-semibold">No order</p>
+            <div className="flex flex-1 w-full justify-center items-center">
+            <p className="text-center text-3xl text-gray-800 font-semibold">No orders</p>
+            </div>
           )}
         </div>
-      </div>
+          </section>
     </>
   );
 }

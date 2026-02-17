@@ -10,7 +10,7 @@ export default function OrdersComponent({ order }: any) {
         {/* Product Image */}
         <div className="h-40 w-40 overflow-hidden rounded-lg bg-gray-100">
           <img
-            src={`http://localhost:4000/${productImage}`}
+            src={`${import.meta.env.VITE_BACKEND_URL}/${productImage}`}
             alt="Product"
             className="h-full w-full object-cover"
           />

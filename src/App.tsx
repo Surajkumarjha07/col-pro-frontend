@@ -24,7 +24,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
+    if (!token && !publicURLs.includes(location.pathname)) {
       navigate("/log-in");
       return;
     }
@@ -56,21 +56,26 @@ function App() {
   const isHideNavbar = hideNavURLs.includes(location.pathname) || publicURLs.includes(location.pathname);;
 
   return (
-    <>
-      {!isHideNavbar && <Navbar />}
+  <div className="min-h-screen flex flex-col">
+    {!isHideNavbar && <Navbar />}
+
+    <main className="flex flex-col flex-1">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/log-in" element={<LogIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/manage-account" element={<ManageAccount />} />
-        <Route path="/products" element={<Products/>}/>
-        <Route path="/cart" element={<Cart/>}/>
-        <Route path="/orders" element={<Order/>}/>
-        <Route path="/about" element={<About/>}/>
+        <Route path="/products" element={<Products />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/orders" element={<Order />} />
+        <Route path="/about" element={<About />} />
       </Routes>
-      {!isHideNavbar && <Footer />}
-    </>
-  );
+    </main>
+
+    {!isHideNavbar && <Footer />}
+  </div>
+);
+
 }
 
 export default App;

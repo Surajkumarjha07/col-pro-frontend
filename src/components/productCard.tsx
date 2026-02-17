@@ -12,6 +12,7 @@ type ProductCardProps = {
   productName: string;
   price: number;
   description: string;
+  showProductOpions: boolean;
 };
 
 export default function ProductCard({
@@ -21,6 +22,7 @@ export default function ProductCard({
   productName,
   price,
   description,
+  showProductOpions
 }: ProductCardProps) {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -54,7 +56,7 @@ export default function ProductCard({
   }) => {
     try {
       const response = await axios.put(
-        `http://localhost:4000/api/products/update-product/${productId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
         {
           newProductName,
           newDescription,
@@ -86,7 +88,7 @@ export default function ProductCard({
 
   const handleDeleteProduct = async () => {
     try {
-        const response = await axios.delete(`http://localhost:4000/api/products/delete-product/${productId}`,
+        const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -111,7 +113,7 @@ export default function ProductCard({
 
   const addToCart = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/cart", 
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/cart`, 
         {
           productId: id,
           quantity: 1,
@@ -154,7 +156,7 @@ export default function ProductCard({
           </h3>
 
           {
-            (user as any).role === "seller" &&
+            (user as any).role === "seller" && showProductOpions &&
             <div className="relative" ref={menuRef}>
             <button
               onClick={() => setOpen((prev) => !prev)}
@@ -163,7 +165,7 @@ export default function ProductCard({
               <BiDotsVerticalRounded className="text-xl" />
             </button>
 
-            {open && (
+            {open && showProductOpions && (
               <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
                 <button
                   onClick={() => {
