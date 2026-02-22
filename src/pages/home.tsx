@@ -28,39 +28,37 @@ export default function Home() {
 
   return (
     <section className="w-full overflow-x-hidden">
-      {/* Hero Section */}
-      <div className="w-full min-h-[70vh] py-10 flex flex-col md:flex-row justify-center items-center gap-10">
-        <aside className="w-full md:w-1/2 text-gray-900 px-6 md:px-10 text-center md:text-left">
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
+      <div className="w-full min-h-[70vh] lg:h-[80vh] py-8 flex flex-col lg:flex-row justify-center items-center gap-10 lg:gap-0 px-4 sm:px-8 lg:px-0">
+        <aside className="w-full lg:w-1/2 text-gray-900 px-4 sm:px-6 lg:px-10">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold leading-tight">
             Your{" "}
-            <span className="text-4xl sm:text-5xl md:text-8xl underline">
+            <span className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl underline">
               everyday
-            </span>
-            <span className="block text-purple-500">shopping</span>
-            <span> experience, </span>
-            <span className="text-4xl sm:text-5xl md:text-8xl underline">
+            </span>{" "}
+            <span className="block text-purple-500">shopping</span>{" "}
+            <span> experience, </span>{" "}
+            <span className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl underline">
               simplified
             </span>
           </h1>
 
-          <p className="mt-6 text-sm sm:text-base md:text-lg text-gray-600 bg-gray-100 rounded-lg px-4 py-2 inline-block">
+          <p className="mt-6 text-base sm:text-lg text-gray-600 bg-gray-100 rounded-lg px-4 py-2 w-fit">
             Discover quality products, manage orders seamlessly, and shop with
             confidence
           </p>
         </aside>
 
-        <aside className="w-full md:w-1/2 h-full">
-          <div className="w-4/5 md:w-3/4 p-4 md:p-6 h-full bg-gray-200 mx-auto rounded-3xl">
+        <aside className="w-full lg:w-1/2 h-full">
+          <div className="w-full sm:w-4/5 lg:w-3/4 p-4 sm:p-6 h-full bg-gray-200 mx-auto rounded-3xl">
             <img
               src="/hero2.png"
               alt="Hero Image"
-              className="w-full h-full object-cover rounded-3xl"
+              className="w-full h-full rounded-3xl"
             />
           </div>
         </aside>
       </div>
 
-      {/* Categories Section */}
       <div className="flex flex-col items-center my-16 gap-4 px-4">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-center">
           Product Categories
@@ -131,7 +129,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Trust Section */}
       <section className="bg-gray-50 py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-center mb-10">
