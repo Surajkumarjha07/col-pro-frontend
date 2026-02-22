@@ -36,11 +36,9 @@ export default function Cart() {
             amount: razorpay_order.amount,
             currency: razorpay_order.currency,
             name: "E-Marketplace",
-            description: "Payment",
+            description: "E-Marketplace payment gateway, secure and reliable payments!",
             order_id: razorpay_order.id,
             handler: async function (response: any) {
-              console.log("PAYMENT SUCCESS::::::::", response);
-
               const finalResponse = await axios.post(
                 `${import.meta.env.VITE_BACKEND_URL}/api/payment`,
                 {
@@ -123,6 +121,7 @@ export default function Cart() {
           "ERROR IN OPENING RAZORPAY::::::::::: ",
           (error as Error).message,
         );
+        toast.error("Something went wrong while opening payment gateway!");
       }
     }
   };

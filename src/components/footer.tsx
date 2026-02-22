@@ -19,7 +19,6 @@ export default function Footer() {
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/products" className="hover:text-white">All Products</Link></li>
-            <li><Link to="/categories" className="hover:text-white">Categories</Link></li>
             <li><Link to="/orders" className="hover:text-white">My Orders</Link></li>
             <li><Link to="/cart" className="hover:text-white">Cart</Link></li>
           </ul>
@@ -31,7 +30,6 @@ export default function Footer() {
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link to="/about" className="hover:text-white">About Us</Link></li>
-            <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
           </ul>
         </div>
 
@@ -40,9 +38,7 @@ export default function Footer() {
             Support
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/help" className="hover:text-white">Help Center</Link></li>
-            <li><Link to="/shipping" className="hover:text-white">Shipping Info</Link></li>
-            <li><Link to="/faq" className="hover:text-white">FAQs</Link></li>
+            <li><Link to="/contact-us" className="hover:text-white">Contact Us</Link></li>
           </ul>
         </div>
       </div>

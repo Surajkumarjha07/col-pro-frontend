@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type ProductUpdateProps = {
   open: boolean;
@@ -10,18 +10,30 @@ type ProductUpdateProps = {
     newStock: number
     newImage: File | null
   }) => void;
+  productData: any
 };
 
 export default function ProductUpdate({
   open,
   onClose,
   onUpdate,
+  productData
 }: ProductUpdateProps) {
-  const [newProductName, setNewProductName] = useState("");
-  const [newDescription, setNewDescription] = useState("");
-  const [newPrice, setNewPrice] = useState("");
-  const [newStock, setNewStock] = useState("");
-  const [newImage, setNewImage] = useState<File | null>(null);
+  const [newProductName, setNewProductName] = useState(productData?.productName);
+  const [newDescription, setNewDescription] = useState(productData?.description);
+  const [newPrice, setNewPrice] = useState(productData?.price);
+  const [newStock, setNewStock] = useState(productData?.stock);
+  const [newImage, setNewImage] = useState<File | null>(productData.productImage);
+
+  useEffect(() => {
+  if (productData) {
+    setNewProductName(productData.productName);
+    setNewDescription(productData.description);
+    setNewPrice(productData.price);
+    setNewStock(productData.stock);
+    setNewImage(null);
+  }
+}, [productData]);
 
   if (!open) return null;
 
@@ -41,7 +53,7 @@ export default function ProductUpdate({
 
         <div className="border-b px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            Upload Product
+            Update Product
           </h2>
         </div>
 

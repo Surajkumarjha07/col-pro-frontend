@@ -13,6 +13,9 @@ import ManageAccount from "./pages/manage-account";
 import Cart from "./pages/cart";
 import Order from "./pages/order";
 import About from "./pages/about";
+import ContactUs from "./pages/contactUs";
+import { jwtDecode } from "jwt-decode";
+import { clearToken } from "./redux/slices/user";
 
 function App() {
   const navigate = useNavigate();
@@ -29,11 +32,28 @@ function App() {
       return;
     }
 
-    console.log("PATHNAME:::::::::::::::::: ", location.pathname);
-
     if (publicURLs.includes(location.pathname) && token) {
       navigate("/");
       return;
+    }
+    
+    if (token) {
+      try {
+        const decoded: any = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decoded.exp < currentTime) {
+          localStorage.removeItem("token");
+          dispatch(clearToken());
+          navigate("/log-in");
+          return;
+        }
+      } catch (error) {
+        localStorage.removeItem("token");
+        dispatch(clearToken());
+        navigate("/log-in");
+        return;
+      }
     }
 
     const handleClick = (e: React.MouseEvent | MouseEvent) => {
@@ -49,33 +69,34 @@ function App() {
 
     return () => {
       document.removeEventListener("click", handleClick);
-    }
+    };
   }, [location.pathname, navigate, dispatch]);
-  
-  
-  const isHideNavbar = hideNavURLs.includes(location.pathname) || publicURLs.includes(location.pathname);;
+
+  const isHideNavbar =
+    hideNavURLs.includes(location.pathname) ||
+    publicURLs.includes(location.pathname);
 
   return (
-  <div className="min-h-screen flex flex-col">
-    {!isHideNavbar && <Navbar />}
+    <div className="min-h-screen flex flex-col">
+      {!isHideNavbar && <Navbar />}
 
-    <main className="flex flex-col flex-1">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/log-in" element={<LogIn />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/manage-account" element={<ManageAccount />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/orders" element={<Order />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </main>
+      <main className="flex flex-col flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/log-in" element={<LogIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/manage-account" element={<ManageAccount />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/orders" element={<Order />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+        </Routes>
+      </main>
 
-    {!isHideNavbar && <Footer />}
-  </div>
-);
-
+      {!isHideNavbar && <Footer />}
+    </div>
+  );
 }
 
 export default App;

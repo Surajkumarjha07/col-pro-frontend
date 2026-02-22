@@ -1,105 +1,159 @@
 import Card from "../components/card";
 import { MdOutlineDevices } from "react-icons/md";
-import { GiClothes } from "react-icons/gi";
-import { GiLipstick } from "react-icons/gi";
-import { GiSofa } from "react-icons/gi";
+import { GiClothes, GiLipstick, GiSofa } from "react-icons/gi";
 
 export default function Home() {
+  const trustItems = [
+    {
+      icon: "🚚",
+      title: "Free Shipping",
+      description: "Free delivery on all orders above ₹499",
+    },
+    {
+      icon: "🔒",
+      title: "Secure Payment",
+      description: "Your transactions are safe and encrypted",
+    },
+    {
+      icon: "🔄",
+      title: "Easy Returns",
+      description: "Hassle-free returns within 7 days",
+    },
+    {
+      icon: "💬",
+      title: "24/7 Support",
+      description: "We are here to help anytime",
+    },
+  ];
+
   return (
-    <>
-      <section className="w-screen relative">
-        <div className="w-full h-[80vh] py-4 flex justify-center items-center">
-          <aside className="w-1/2 text-gray-900 px-10">
-            <h1 className="text-6xl font-semibold leading-tight">
-              Your <span className="text-8xl underline"> everyday </span>
-              <span className="block text-purple-500">shopping</span>
-              <span> experience, </span>
-              <span className="text-8xl underline">simplified</span>
-            </h1>
-
-            <p className="mt-6 text-lg text-gray-600 bg-gray-100 rounded-lg px-4 py-2 w-fit">
-              Discover quality products, manage orders seamlessly, and shop with
-              confidence
-            </p>
-          </aside>
-
-          <aside className="w-1/2 h-full">
-            <div className="w-3/4 p-6 h-full bg-gray-200 mx-auto rounded-4xl">
-              <img
-                src="/hero2.png"
-                alt="Hero Image"
-                className="w-full h-full mx-auto rounded-4xl"
-              />
-            </div>
-          </aside>
-        </div>
-
-        <div className="flex flex-col items-center my-16 gap-4">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Product Categories
+    <section className="w-full overflow-x-hidden">
+      {/* Hero Section */}
+      <div className="w-full min-h-[70vh] py-10 flex flex-col md:flex-row justify-center items-center gap-10">
+        <aside className="w-full md:w-1/2 text-gray-900 px-6 md:px-10 text-center md:text-left">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
+            Your{" "}
+            <span className="text-4xl sm:text-5xl md:text-8xl underline">
+              everyday
+            </span>
+            <span className="block text-purple-500">shopping</span>
+            <span> experience, </span>
+            <span className="text-4xl sm:text-5xl md:text-8xl underline">
+              simplified
+            </span>
           </h1>
-          <div className="grid grid-cols-4 gap-8 my-12">
-          <Card title="Fashion" description={
-            <>
-          Discover a refined collection of apparel,
-          <br />
-          footwear, and accessories crafted with
-          <br />
-          attention to quality, comfort,
-          <br />
-          and timeless design. Ideal for everyday
-          <br />
-          wear and evolving lifestyles.
-            </>
-          } icon={
-            <GiClothes size={60} className="text-gray-900"/>
-          }/>
-          <Card title="Electronics" description={
-            <>
-          Discover carefully selected electronic
-          <br />
-          devices and accessories that combine
-          <br />
-          modern technology with dependable
-          <br />
-          performance and thoughtful design.
-          </>
-         } icon={
-          <MdOutlineDevices size={60} className="text-gray-900"/>
-         }/>
-          <Card title="Beauty & Personal Care" description={
-            <>
-          Discover beauty and personal care
-          <br />
-          essentials created to maintain comfort,
-          <br />
-          confidence, and well-being through
-          <br />
-          reliable formulations and practical
-          <br />
-          design
-            </>
-          }
-          icon={
-            <GiLipstick size={60} className="text-gray-900"/>
-          }/>
-          <Card title="Home & Living" description={
-            <>
-            Browse thoughtfully selected home
-            <br />
-            and living products that combine
-            <br />
-            refined design with reliable materials
-            <br />
-            for everyday use.
-            </>
-          }
-          icon={
-            <GiSofa size={60} className="text-gray-900"/>
-          }/>
+
+          <p className="mt-6 text-sm sm:text-base md:text-lg text-gray-600 bg-gray-100 rounded-lg px-4 py-2 inline-block">
+            Discover quality products, manage orders seamlessly, and shop with
+            confidence
+          </p>
+        </aside>
+
+        <aside className="w-full md:w-1/2 h-full">
+          <div className="w-4/5 md:w-3/4 p-4 md:p-6 h-full bg-gray-200 mx-auto rounded-3xl">
+            <img
+              src="/hero2.png"
+              alt="Hero Image"
+              className="w-full h-full object-cover rounded-3xl"
+            />
+          </div>
+        </aside>
+      </div>
+
+      {/* Categories Section */}
+      <div className="flex flex-col items-center my-16 gap-4 px-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 text-center">
+          Product Categories
+        </h1>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 my-12 w-full max-w-7xl">
+          <Card
+            title="Fashion"
+            description={
+              <>
+                Discover a refined collection of apparel,
+                <br />
+                footwear, and accessories crafted with
+                <br />
+                attention to quality, comfort,
+                <br />
+                and timeless design.
+              </>
+            }
+            icon={<GiClothes size={60} className="text-gray-900 mx-auto" />}
+          />
+
+          <Card
+            title="Electronics"
+            description={
+              <>
+                Discover carefully selected electronic
+                <br />
+                devices and accessories that combine
+                <br />
+                modern technology with dependable
+                <br />
+                performance.
+              </>
+            }
+            icon={
+              <MdOutlineDevices size={60} className="text-gray-900 mx-auto" />
+            }
+          />
+
+          <Card
+            title="Beauty & Personal Care"
+            description={
+              <>
+                Discover beauty and personal care
+                <br />
+                essentials created to maintain comfort,
+                <br />
+                confidence, and well-being.
+              </>
+            }
+            icon={<GiLipstick size={60} className="text-gray-900 mx-auto" />}
+          />
+
+          <Card
+            title="Home & Living"
+            description={
+              <>
+                Browse thoughtfully selected home
+                <br />
+                and living products that combine
+                <br />
+                refined design with reliable materials.
+              </>
+            }
+            icon={<GiSofa size={60} className="text-gray-900 mx-auto" />}
+          />
+        </div>
+      </div>
+
+      {/* Trust Section */}
+      <section className="bg-gray-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-center mb-10">
+            Why Shop With Us?
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {trustItems.map((item, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition text-center"
+              >
+                <div className="text-3xl sm:text-4xl mb-4">{item.icon}</div>
+                <h3 className="text-base sm:text-lg font-medium mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 text-sm">{item.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-    </>
+    </section>
   );
 }

@@ -22,13 +22,14 @@ export default function ProductCard({
   productName,
   price,
   description,
-  showProductOpions
+  showProductOpions,
 }: ProductCardProps) {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const token = useAppSelector((state) => state.User.token);
   const user = useAppSelector((state) => state.User.user);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [productData, setProductData] = useState({});
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -40,6 +41,27 @@ export default function ProductCard({
     document.addEventListener("click", handler);
     return () => document.removeEventListener("click", handler);
   }, []);
+
+  useEffect(() => {
+    if (!openUpdateModal) return;
+
+    (async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        },
+      );
+
+      if (response.status === 200) {
+        setProductData(response.data.data);
+      }
+    })();
+  }, [openUpdateModal]);
 
   const handleProductUpdate = async ({
     newProductName,
@@ -76,6 +98,7 @@ export default function ProductCard({
       if (response.status === 200) {
         toast.success("Product updated successfully!");
         setOpenUpdateModal(false);
+        window.location.reload();
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -88,60 +111,67 @@ export default function ProductCard({
 
   const handleDeleteProduct = async () => {
     try {
-        const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                withCredentials: true
-            }
-        )
+      const response = await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        },
+      );
 
-        if (response.status === 200) {
-            toast.success("Product deleted successfully!");
-        }
-
+      if (response.status === 200) {
+        toast.success("Product deleted successfully!");
+        window.location.reload();
+      }
     } catch (error) {
-        if (axios.isAxiosError(error)) {
+      if (axios.isAxiosError(error)) {
         const message =
-          error.response?.data.message ?? "Internal server error!";
+          error.response?.data?.message ?? "Internal server error!";
         toast.error(message);
-      }   
+      }
     }
-  }
+  };
 
   const addToCart = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/cart`, 
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/cart`,
         {
           productId: id,
           quantity: 1,
-          price
+          price,
         },
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
-      if (response.status == 200) {
+      if (response.status === 200) {
         toast.success("Product added to cart!");
       }
-
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        const message = error.response?.data.message ?? error.response?.data.data ?? "Internal server error!";
+        const message =
+          error.response?.data.message ??
+          error.response?.data.data ??
+          "Internal server error!";
         toast.error(message);
       }
     }
-  }
+  };
 
   return (
-    <div className="w-80 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
-      <div className="h-60 w-full overflow-hidden rounded-t-xl bg-gray-100">
+    <div className="w-full max-w-sm mx-auto rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div
+        className="w-full overflow-hidden rounded-t-xl bg-gray-100 
+                      h-48 sm:h-52 md:h-56"
+      >
         <img
           src={image}
           alt={productName}
@@ -149,63 +179,70 @@ export default function ProductCard({
         />
       </div>
 
-      <div className="px-4 py-6 flex flex-col gap-2">
+      {/* Content */}
+      <div className="px-4 py-4 sm:px-5 sm:py-5 flex flex-col gap-2">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 line-clamp-1">
             {productName}
           </h3>
 
-          {
-            (user as any).role === "seller" && showProductOpions &&
+          {(user as any).role === "seller" && showProductOpions && (
             <div className="relative" ref={menuRef}>
-            <button
-              onClick={() => setOpen((prev) => !prev)}
-              className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-            >
-              <BiDotsVerticalRounded className="text-xl" />
-            </button>
+              <button
+                onClick={() => setOpen((prev) => !prev)}
+                className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+              >
+                <BiDotsVerticalRounded className="text-lg sm:text-xl" />
+              </button>
 
-            {open && showProductOpions && (
-              <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    setOpenUpdateModal(true);
-                    // setProductId(id);
-                  }}
-                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+              {open && (
+                <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      setOpenUpdateModal(true);
+                    }}
+                    className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
-                  Update
-                </button>
+                    Update
+                  </button>
 
-                <button
-                  onClick={() => {
-                    setOpen(false);
-                    handleDeleteProduct()
-                  }}
-                  className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      handleDeleteProduct();
+                    }}
+                    className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50"
                   >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-      }
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-            {/* Product Update Modal */}
         <ProductUpdate
           open={openUpdateModal}
           onClose={() => setOpenUpdateModal(false)}
           onUpdate={handleProductUpdate}
+          productData={productData}
         />
 
-        <p className="text-sm text-gray-600 line-clamp-2">{description}</p>
+        <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+          {description}
+        </p>
 
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-lg font-bold text-gray-900">₹{price}</span>
+          <span className="text-base sm:text-lg font-bold text-gray-900">
+            ₹{price}
+          </span>
 
-          <button className="rounded-lg bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 cursor-pointer" onClick={addToCart}>
+          <button
+            className="rounded-lg bg-black px-3 sm:px-4 py-1.5 sm:py-2 
+            text-xs sm:text-sm font-semibold text-white hover:bg-gray-800"
+            onClick={addToCart}
+          >
             Add to Cart
           </button>
         </div>

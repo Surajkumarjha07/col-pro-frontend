@@ -20,7 +20,7 @@ export default function ProfileBadge() {
             <div className="profile w-16 h-16 rounded-full bg-linear-to-tr from-gray-400 to-gray-800 flex items-center justify-center text-white font-semibold text-xl cursor-pointer">
                 <p className='pointer-events-none text-2xl'>
                     {
-                        (user as any).name?.charAt(0).toUpperCase() ?? "S"
+                        (user as any).name?.charAt(0).toUpperCase()
                     }
                 </p>
             </div>
