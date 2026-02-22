@@ -136,10 +136,10 @@ export default function Products() {
 
       if (response.status === 200) {
         toast.success("Product uploaded successfully!");
-        // fetchCreatedProducts
-        //   ? handleGetCreatedProducts()
-        //   : handleGetAllProducts();
-        // setOpenProductUpload(false);
+        fetchCreatedProducts
+          ? handleGetCreatedProducts()
+          : handleGetAllProducts();
+        setOpenProductUpload(false);
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -157,6 +157,8 @@ export default function Products() {
     page: number,
     limit: number,
   ) => {
+    setLoading(true);
+    setProducts([]);
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/products/search?query=${searchQuery}&page=${page}&limit=${limit}`,
@@ -183,6 +185,9 @@ export default function Products() {
           "Internal server error!";
         toast.error(message);
       }
+    }
+    finally {
+      setLoading(false);
     }
   };
 
