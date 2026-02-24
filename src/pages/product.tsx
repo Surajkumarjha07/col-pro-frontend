@@ -222,7 +222,9 @@ export default function Products() {
 
   useEffect(() => {
     if (!selectedCategory) return;
-
+    setLoading(true);
+    setProducts([]);
+    
     (async () => {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/category?category=${selectedCategory}&page=${page}&limit=${limit}`, {
         headers: {
@@ -233,9 +235,9 @@ export default function Products() {
       })
 
       if (response.status == 200) {
-        setProducts([]);
         setProducts(response.data.data.products);
         setTotalProducts(response.data.data.totalProducts)
+        setLoading(false);
       }
     })()
   }, [selectedCategory, page])
