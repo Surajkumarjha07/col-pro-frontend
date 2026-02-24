@@ -6,6 +6,7 @@ type ProductUploadProps = {
   onUpload: (data: {
     productName: string
     description: string
+    category: string
     price: number
     stock: number
     image: File | null
@@ -19,6 +20,7 @@ export default function ProductUpload({
 }: ProductUploadProps) {
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const [image, setImage] = useState<File | null>(null);
@@ -29,6 +31,7 @@ export default function ProductUpload({
     onUpload({
       productName,
       description,
+      category,
       price: Number(price),
       stock: Number(stock),
       image,
@@ -70,6 +73,25 @@ export default function ProductUpload({
               className="mt-1 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900"
               placeholder="Product description"
             />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Category
+            </label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-gray-900 focus:ring-1 focus:ring-gray-900 bg-white"
+            >
+              <option value="" disabled>
+                Select Category
+              </option>
+              <option value="electronics">Electronics</option>
+              <option value="accessories">Accessories</option>
+              <option value="fashion">Fashion</option>
+              <option value="beauty">Beauty</option>
+            </select>
           </div>
 
           <div>

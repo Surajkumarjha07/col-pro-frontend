@@ -4,6 +4,7 @@ import ProductUpdate from "./productUpdate";
 import axios from "axios";
 import { useAppSelector } from "../redux/hooks";
 import { toast } from "sonner";
+import StarRating from "./review";
 
 type ProductCardProps = {
   id: string;
@@ -11,8 +12,9 @@ type ProductCardProps = {
   image?: string;
   productName: string;
   price: number;
+  rating: number,
   description: string;
-  showProductOpions: boolean;
+  showActionsOptions: boolean
 };
 
 export default function ProductCard({
@@ -21,8 +23,9 @@ export default function ProductCard({
   image,
   productName,
   price,
+  rating,
   description,
-  showProductOpions,
+  showActionsOptions
 }: ProductCardProps) {
   const [open, setOpen] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
@@ -30,6 +33,7 @@ export default function ProductCard({
   const user = useAppSelector((state) => state.User.user);
   const menuRef = useRef<HTMLDivElement>(null);
   const [productData, setProductData] = useState({});
+  const [openRatingModal, setOpenRatingModal] = useState(false);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -186,17 +190,18 @@ export default function ProductCard({
             {productName}
           </h3>
 
-          {(user as any).role === "seller" && showProductOpions && (
-            <div className="relative" ref={menuRef}>
-              <button
-                onClick={() => setOpen((prev) => !prev)}
-                className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
-              >
-                <BiDotsVerticalRounded className="text-lg sm:text-xl" />
-              </button>
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setOpen((prev) => !prev)}
+              className="rounded-md p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+            >
+              <BiDotsVerticalRounded className="text-lg sm:text-xl" />
+            </button>
 
-              {open && (
-                <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
+            {open && (
+              <div className="absolute right-0 z-10 mt-2 w-32 rounded-lg border border-gray-200 bg-white shadow-lg">
+                {
+                  (user as any).role === "seller" && showActionsOptions &&
                   <button
                     onClick={() => {
                       setOpen(false);
@@ -205,8 +210,20 @@ export default function ProductCard({
                     className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
                   >
                     Update
-                  </button>
+                  </button>}
 
+                <button
+                  onClick={() => {
+                    setOpen(false);
+                    setOpenRatingModal(true)
+                  }}
+                  className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Rate
+                </button>
+
+                {
+                  (user as any).role === "seller" && showActionsOptions &&
                   <button
                     onClick={() => {
                       setOpen(false);
@@ -216,10 +233,10 @@ export default function ProductCard({
                   >
                     Delete
                   </button>
-                </div>
-              )}
-            </div>
-          )}
+                }
+              </div>
+            )}
+          </div>
         </div>
 
         <ProductUpdate
@@ -229,14 +246,27 @@ export default function ProductCard({
           productData={productData}
         />
 
+        <StarRating productId={productId} open={openRatingModal} onClose={() => setOpenRatingModal(false)} />
+
         <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
           {description}
         </p>
 
         <div className="mt-2 flex items-center justify-between">
-          <span className="text-base sm:text-lg font-bold text-gray-900">
-            ₹{price}
-          </span>
+          <div className="flex justify-center items-end gap-2">
+            <span className="text-base sm:text-lg font-bold text-gray-900">
+              ₹{price}
+            </span>
+
+            <button className="text-yellow-400 text-2xl flex justify-center items-end">
+              ★
+              <span className="text-lg text-gray-600 align-middle font-medium">
+                {
+                  rating
+                }
+              </span>
+            </button>
+          </div>
 
           <button
             className="rounded-lg bg-black px-3 sm:px-4 py-1.5 sm:py-2 

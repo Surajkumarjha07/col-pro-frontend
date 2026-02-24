@@ -58,6 +58,8 @@ export default function ManageAccount() {
       if (response.status === 200) {
         toast.success("Profile updated successfully!");
         setSubmitClicked(false);
+        localStorage.removeItem("token");
+        navigate("/log-in");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -67,7 +69,6 @@ export default function ManageAccount() {
         setSubmitClicked(false);
       }
     }
-
   };
 
   const deleteAccount = async (e: React.MouseEvent | MouseEvent) => {
@@ -91,6 +92,8 @@ export default function ManageAccount() {
       if (response.status === 200) {
         toast.success("User deleted successfully!");
         setSubmitClicked(false);
+        localStorage.removeItem("token");
+        navigate("/log-in");
       }
       
     } catch (error) {

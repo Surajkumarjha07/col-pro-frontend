@@ -16,13 +16,18 @@ export default function Products() {
   const token = useAppSelector((state) => state.User.token);
   const user = useAppSelector((state) => state.User.user);
   const [products, setProducts] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [fetchCreatedProducts, setFetchCreatedProducts] =
     useState<boolean>(false);
   const [page, setPage] = useState(1);
   const limit = 10;
   const [totalProducts, setTotalProducts] = useState(0);
-  const [showProductOpions, setShowProductOpions] = useState(false);
+  const [showActionsOptions, setShowActionsOptions] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const categories = [
+    "electronics", "accessories", "fashion", "beauty"
+  ]
 
   const handleGetAllProducts = async () => {
     setLoading(true);
@@ -70,7 +75,7 @@ export default function Products() {
       if (response.status === 200) {
         setProducts(response.data.data.products);
         setTotalProducts(response.data.data.totalCount);
-        setShowProductOpions(true);
+        setShowActionsOptions(true);
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -86,7 +91,7 @@ export default function Products() {
   };
 
   useEffect(() => {
-    if (!token || searchQuery.trim() !== "") return;
+    if (!token || searchQuery.trim() !== "" || selectedCategory) return;
 
     if ((user as any).role === "seller" && fetchCreatedProducts) {
       handleGetCreatedProducts();
@@ -94,22 +99,24 @@ export default function Products() {
     }
 
     handleGetAllProducts();
-  }, [token, searchQuery, fetchCreatedProducts, user, page]);
+  }, [token, searchQuery, fetchCreatedProducts, user, page, selectedCategory]);
 
   const handleProductUpload = async ({
     productName,
     description,
+    category,
     price,
     stock,
     image,
   }: {
     productName: string;
     description: string;
+    category: string
     price: number;
     stock: number;
     image: File | null;
   }) => {
-    if (!productName || !description || !price || !stock || !image) {
+    if (!productName || !description || !category || !price || !stock || !image) {
       toast.error("Enter required fields!");
       return;
     }
@@ -118,6 +125,7 @@ export default function Products() {
       const formData = new FormData();
       formData.append("productName", productName);
       formData.append("description", description);
+      formData.append("category", category);
       formData.append("price", String(price));
       formData.append("stock", String(stock));
       if (image) formData.append("image", image);
@@ -212,31 +220,85 @@ export default function Products() {
     };
   }, [debouncedSearch]);
 
+  useEffect(() => {
+    if (!selectedCategory) return;
+
+    (async () => {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/category?category=${selectedCategory}&page=${page}&limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      })
+
+      if (response.status == 200) {
+        setProducts([]);
+        setProducts(response.data.data.products);
+        setTotalProducts(response.data.data.totalProducts)
+      }
+    })()
+  }, [selectedCategory, page])
+
   return (
     <section className="w-full flex flex-col flex-1 overflow-x-hidden">
       <div
-        className={`flex flex-col md:flex-row md:items-center 
-            ${
-              (user as any).role === "seller"
-                ? "md:justify-between"
-                : "md:justify-end"
-            } 
-            gap-4 bg-white p-4 md:p-6`}
+        className={`flex flex-col md:flex-row md:items-start bg-green-500
+            ${(user as any).role === "seller"
+            ? "md:justify-between"
+            : "md:justify-end"
+          } 
+            gap-4 bg-white p-4 md:px-6 md:py-4`}
       >
-        {(user as any).role === "seller" && (
-          <div className="flex items-center gap-3">
-            <span className="text-gray-800 font-bold text-xl md:text-2xl">
-              Created Products
-            </span>
-            <Switch
-              checked={fetchCreatedProducts}
-              onChange={(e) => {
-                setFetchCreatedProducts(e.target.checked);
-                setShowProductOpions(false);
-              }}
-            />
+        <div className="flex flex-col justify-center items-start flex-1">
+          {(user as any).role === "seller" && (
+            <div className="flex items-center gap-3">
+              <span className="text-gray-800 font-bold text-xl md:text-2xl">
+                Created Products
+              </span>
+              <Switch
+                checked={fetchCreatedProducts}
+                onChange={(e) => {
+                  setFetchCreatedProducts(e.target.checked);
+                  setShowActionsOptions(false);
+                }}
+              />
+            </div>
+          )}
+
+          <div className="w-full overflow-x-auto">
+            <div className="flex gap-3 py-4 min-w-max">
+              {categories.map((cat) => {
+                const isActive = selectedCategory === cat;
+
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => {
+                      setSelectedCategory(isActive ? null : cat);
+                      setPage(1);
+                    }}
+                    className={`
+            whitespace-nowrap
+            px-4 py-1.5 
+            rounded-full 
+            text-sm 
+            font-medium 
+            transition-all
+            border
+            ${isActive
+                        ? "bg-gray-900 text-white border-gray-900"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                      }
+          `}
+                  >
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        )}
+        </div>
 
         <div className="flex flex-col sm:flex-row w-full md:w-auto items-center gap-4">
           <div className="w-full sm:w-auto">
@@ -280,14 +342,15 @@ export default function Products() {
               >
                 {products.map((product) => (
                   <ProductCard
-                    key={product._id}
-                    id={product._id}
-                    productId={product.productId}
-                    productName={product.productName}
-                    description={product.description}
-                    price={product.price}
-                    image={`${import.meta.env.VITE_BACKEND_URL}/${product.productImage}`}
-                    showProductOpions={showProductOpions}
+                    key={product?._id}
+                    id={product?._id}
+                    productId={product?.productId}
+                    productName={product?.productName}
+                    description={product?.description}
+                    price={product?.price}
+                    rating={product?.rating?.average}
+                    image={`${import.meta.env.VITE_BACKEND_URL}/${product?.productImage}`}
+                    showActionsOptions={showActionsOptions}
                   />
                 ))}
               </div>

@@ -10,7 +10,6 @@ export const ProfileBadgeSlice = createSlice({
     reducers: {
         setOpenProfileBadge: (state, action: PayloadAction<boolean>) => {
             state.isProfileBadgeOpen = action.payload;
-            console.log("HEHHEH")
         }
     }
 })
