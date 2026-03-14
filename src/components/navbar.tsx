@@ -60,7 +60,7 @@ export default function Navbar() {
                         bg-gray-900 cursor-pointer"
         >
           <p className="text-sm sm:text-lg md:text-xl font-bold text-white">
-            { (user as any).name.charAt(0).toUpperCase() }
+            { (user as any)?.name?.charAt(0)?.toUpperCase() }
           </p>
           <ProfileBadge />
         </div>
