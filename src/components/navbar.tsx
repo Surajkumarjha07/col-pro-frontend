@@ -2,10 +2,12 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import ProfileBadge from "./profileBadge";
+import { useAppSelector } from "../redux/hooks";
 
 export default function Navbar() {
   const { pathname } = useLocation();
   const [openMenu, setOpenMenu] = useState(false);
+  const user = useAppSelector(state => state.User.user);
 
   const navItems = [
     { label: "Home", path: "/" },
@@ -58,7 +60,7 @@ export default function Navbar() {
                         bg-gray-900 cursor-pointer"
         >
           <p className="text-sm sm:text-lg md:text-xl font-bold text-white">
-            S
+            { (user as any).name.charAt(0).toUpperCase() }
           </p>
           <ProfileBadge />
         </div>
