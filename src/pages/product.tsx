@@ -312,7 +312,7 @@ export default function Products() {
               className="w-full sm:w-72 flex justify-center items-center gap-2 
                 rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-semibold 
                 text-white hover:bg-gray-800 transition-colors"
-              onClick={() => setOpenProductUpload(true)}
+              onClick={() => {setOpenProductUpload(true); console.log("hdgjgjgfdjg")}}
             >
               <BiPlus className="text-xl" />
               <span>New Product</span>
@@ -321,14 +321,14 @@ export default function Products() {
         </div>
       </div>
 
+      <ProductUpload
+        open={openProductUpload}
+        onClose={() => setOpenProductUpload(false)}
+        onUpload={handleProductUpload}
+      />
+
       {products && products.length > 0 ? (
         <>
-          <ProductUpload
-            open={openProductUpload}
-            onClose={() => setOpenProductUpload(false)}
-            onUpload={handleProductUpload}
-          />
-
           <div className="flex flex-col flex-1">
             <div className="flex flex-1 justify-center my-6 md:my-10">
               <div
