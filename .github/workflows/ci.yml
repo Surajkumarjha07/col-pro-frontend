@@ -10,6 +10,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - run: npm ci
-            - run: docker build -t ${{secrets.DOCKER_USERNAME}}/col-pro-frontend-image:latest-v1 .
+            - run: docker build -t ${{secrets.DOCKER_USERNAME}}/col-pro-frontend-image:latest-v2 .
             - run: docker login -u "${{secrets.DOCKER_USERNAME}}" -p "${{secrets.DOCKER_PASSWORD}}"
-            - run: docker push ${{secrets.DOCKER_USERNAME}}/col-pro-frontend-image:latest-v1
+            - run: docker push ${{secrets.DOCKER_USERNAME}}/col-pro-frontend-image:latest-v2
